@@ -70,6 +70,16 @@ const LinkedList = struct {
         }
         std.debug.print("null\n", .{});
     }
+
+    fn deinit(self: *LinkedList) void {
+        var current = self.head;
+        while (current != null) {
+            const temp = current;
+            current = current.?.next;
+            self.allocator.destroy(temp.?);
+        }
+        self.head = null; // Make sure the list is empty
+    }
 };
 
 pub fn main() !void {
@@ -86,4 +96,7 @@ pub fn main() !void {
     try list.delete(20);
     std.debug.print("After deleting 20:\n", .{});
     list.print();
+
+    // Cleanup
+    list.deinit();
 }
