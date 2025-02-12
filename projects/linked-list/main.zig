@@ -5,9 +5,7 @@ const Node = struct {
     data: i32,
     next: ?*Node,
 
-    pub fn init(data: i32) !*Node {
-        var gpa = std.heap.GeneralPurposeAllocator(.{}){};
-        const allocator = gpa.allocator();
+    pub fn init(allocator: std.mem.Allocator, data: i32) !*Node {
         const node = try allocator.create(Node);
         node.* = Node{ .data = data, .next = null };
         return node;
@@ -25,8 +23,8 @@ const LinkedList = struct {
         return LinkedList{ .head = null };
     }
 
-    fn append(self: *LinkedList, value: i32) !void {
-        const new_node = try Node.init(value);
+    fn append(self: *LinkedList, allocator: std.mem.Allocator, value: i32) !void {
+        const new_node = try Node.init(allocator, value);
         if (self.head == null) {
             self.head = new_node;
             return;
@@ -37,6 +35,28 @@ const LinkedList = struct {
             current = current.?.next;
         }
         current.?.next = new_node;
+    }
+
+    fn delete(self: *LinkedList, allocator: std.mem.Allocator, data: i32) !void {
+        if (self.head == null) return;
+
+        if (self.head.?.data == data) {
+            const temp = self.head;
+            self.head = self.head.?.next;
+            allocator.destroy(temp.?);
+            return;
+        }
+
+        var current = self.head;
+        while (current.?.next != null and current.?.next.?.data != data) {
+            current = current.?.next;
+        }
+
+        if (current.?.next != null) {
+            const temp = current.?.next;
+            current.?.next = current.?.next.?.next;
+            allocator.destroy(temp.?);
+        }
     }
 
     fn print(self: *LinkedList) void {
@@ -51,9 +71,17 @@ const LinkedList = struct {
 };
 
 pub fn main() !void {
+    var gpa = std.heap.GeneralPurposeAllocator(.{}){};
+    const allocator = gpa.allocator();
+
     var list = LinkedList.init();
-    try list.append(10);
-    try list.append(20);
-    try list.append(30);
+    try list.append(allocator, 10);
+    try list.append(allocator, 20);
+    try list.append(allocator, 30);
+    std.debug.print("After appending:\n", .{});
+    list.print();
+
+    try list.delete(allocator, 20);
+    std.debug.print("After deleting 20:\n", .{});
     list.print();
 }
