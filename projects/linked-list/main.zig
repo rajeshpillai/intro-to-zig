@@ -40,10 +40,40 @@ const LinkedList = struct {
     }
 
     fn prepend(self: *LinkedList, value: i32) !void {
-        const new_node: *Node = try self.allocator.create(Node);
-        new_node.* = Node{ .value = value, .next = null };
-        new_node.next = self.head;
+        const new_node = try self.allocator.create(Node);
+        new_node.* = Node{ .value = value, .next = self.head };
         self.head = new_node;
+    }
+
+    fn insertAt(self: *LinkedList, index: usize, value: i32) !void {
+        if (index == 0) {
+            try self.prepend(value);
+            return;
+        }
+
+        if (self.head == null) {
+            std.debug.print("⚠️ List is empty, inserting as the first element.\n", .{});
+            try self.append(value);
+            return;
+        }
+
+        var current = self.head;
+        var pos: usize = 0;
+
+        while (current != null and pos < index - 1) {
+            current = current.?.next;
+            pos += 1;
+        }
+
+        if (current == null or current.?.next == null) {
+            std.debug.print("⚠️ Index out of bounds, inserting at the end.\n", .{});
+            try self.append(value);
+            return;
+        }
+
+        const new_node = try self.allocator.create(Node);
+        new_node.* = Node{ .value = value, .next = current.?.next };
+        current.?.next = new_node;
     }
 
     fn delete(self: *LinkedList, value: i32) !void {
@@ -106,6 +136,14 @@ pub fn main() !void {
 
     try list.prepend(5);
     std.debug.print("After prepending 5:\n", .{});
+    list.print();
+
+    try list.insertAt(0, 15);
+    std.debug.print("After inserting 15 at index 0:\n", .{});
+    list.print();
+
+    try list.insertAt(2, 16);
+    std.debug.print("After inserting 16 at index 2:\n", .{});
     list.print();
 
     // Cleanup
