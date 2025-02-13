@@ -134,8 +134,39 @@ pub const String = struct {
         self.size += literal.len;
     }
 
+    pub fn insert_optimized(self: *String, literal: []const u8, index: usize) Error!void {
+        const insert_len = literal.len;
+
+        // Ensure enough space in buffer
+        if (self.buffer) |buffer| {
+            if (self.size + insert_len > buffer.len) {
+                try self.allocate((self.size + insert_len) * 2);
+            }
+        } else {
+            try self.allocate(insert_len * 2);
+        }
+
+        const buffer = self.buffer.?;
+
+        // If inserting at the end, just append directly
+        if (index == self.len()) {
+            @memcpy(buffer[self.size .. self.size + insert_len], literal);
+        } else {
+            if (String.getIndex(buffer, index, true)) |k| {
+                // Use `memmove()` for efficient shifting
+                std.mem.copyBackwards(u8, buffer[k + insert_len ..], buffer[k..self.size]);
+
+                // Copy the new text into place
+                @memcpy(buffer[k .. k + insert_len], literal);
+            }
+        }
+
+        self.size += insert_len;
+    }
+
     /// Appends a character onto the end of the String
     pub fn concat(self: *String, char: []const u8) Error!void {
-        try self.insert(char, self.len());
+        //try self.insert(char, self.len());
+        try self.insert_optimized(char, self.len());
     }
 };
