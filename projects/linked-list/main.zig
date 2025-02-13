@@ -108,6 +108,31 @@ const LinkedList = struct {
         std.debug.print("null\n", .{});
     }
 
+    /// ✅ **New Method: Get Length of the List**
+    fn length(self: *LinkedList) usize {
+        var count: usize = 0;
+        var current = self.head;
+
+        while (current != null) {
+            count += 1;
+            current = current.?.next;
+        }
+        return count;
+    }
+
+    /// ✅ **New Method: Find a Node with the Given Value**
+    fn find(self: *LinkedList, value: i32) ?*Node {
+        var current = self.head;
+
+        while (current != null) {
+            if (current.?.value == value) {
+                return current;
+            }
+            current = current.?.next;
+        }
+        return null; // Not found
+    }
+
     fn deinit(self: *LinkedList) void {
         var current = self.head;
         while (current != null) {
@@ -145,6 +170,18 @@ pub fn main() !void {
     try list.insertAt(2, 16);
     std.debug.print("After inserting 16 at index 2:\n", .{});
     list.print();
+
+    const found = list.find(5);
+    if (found) |node| {
+        std.debug.print("✅ Found value: {}\n", .{node.value});
+    } else {
+        std.debug.print("❌ Value not found\n", .{});
+    }
+
+    try list.delete(30);
+    std.debug.print("After deleting 30:\n", .{});
+    list.print();
+    std.debug.print("Length of list after deletion: {}\n", .{list.length()});
 
     // Cleanup
     list.deinit();
