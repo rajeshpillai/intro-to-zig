@@ -39,6 +39,13 @@ const LinkedList = struct {
         current.?.next = new_node;
     }
 
+    fn prepend(self: *LinkedList, value: i32) !void {
+        const new_node: *Node = try self.allocator.create(Node);
+        new_node.* = Node{ .value = value, .next = null };
+        new_node.next = self.head;
+        self.head = new_node;
+    }
+
     fn delete(self: *LinkedList, value: i32) !void {
         if (self.head == null) return;
 
@@ -95,6 +102,10 @@ pub fn main() !void {
 
     try list.delete(20);
     std.debug.print("After deleting 20:\n", .{});
+    list.print();
+
+    try list.prepend(5);
+    std.debug.print("After prepending 5:\n", .{});
     list.print();
 
     // Cleanup
