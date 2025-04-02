@@ -4,6 +4,13 @@ zig-out/
 zig-cache/**/*
 zig-out/**/*
 
+node_modules
+
+*.dll
+*.obj
+*.lib
+*.pdb
+
 # Ignore compiled binaries
 *.o
 *.a
