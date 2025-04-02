@@ -1,0 +1,1 @@
+zig build-lib fib_wasm.zig -target wasm32-freestanding  -dynamic  -femit-bin=output/fib.wasm
