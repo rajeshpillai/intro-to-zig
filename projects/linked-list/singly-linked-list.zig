@@ -1,7 +1,7 @@
 const std = @import("std");
 const stdout = std.io.getStdOut().writer();
 
-const Node = struct {
+pub const Node = struct {
     value: i32,
     next: ?*Node,
 
@@ -16,15 +16,15 @@ const Node = struct {
     }
 };
 
-const LinkedList = struct {
+pub const LinkedList = struct {
     head: ?*Node,
     allocator: std.mem.Allocator,
 
-    fn init(allocator: std.mem.Allocator) LinkedList {
+    pub fn init(allocator: std.mem.Allocator) LinkedList {
         return LinkedList{ .head = null, .allocator = allocator };
     }
 
-    fn append(self: *LinkedList, value: i32) !void {
+    pub fn append(self: *LinkedList, value: i32) !void {
         const new_node = try self.allocator.create(Node);
         new_node.* = Node{ .value = value, .next = null };
         if (self.head == null) {
@@ -39,13 +39,13 @@ const LinkedList = struct {
         current.?.next = new_node;
     }
 
-    fn prepend(self: *LinkedList, value: i32) !void {
+    pub fn prepend(self: *LinkedList, value: i32) !void {
         const new_node = try self.allocator.create(Node);
         new_node.* = Node{ .value = value, .next = self.head };
         self.head = new_node;
     }
 
-    fn insertAt(self: *LinkedList, index: usize, value: i32) !void {
+    pub fn insertAt(self: *LinkedList, index: usize, value: i32) !void {
         if (index == 0) {
             try self.prepend(value);
             return;
@@ -76,7 +76,7 @@ const LinkedList = struct {
         current.?.next = new_node;
     }
 
-    fn delete(self: *LinkedList, value: i32) !void {
+    pub fn delete(self: *LinkedList, value: i32) !void {
         if (self.head == null) return;
 
         if (self.head.?.value == value) {
@@ -98,7 +98,7 @@ const LinkedList = struct {
         }
     }
 
-    fn print(self: *LinkedList) void {
+    pub fn print(self: *LinkedList) void {
         var current = self.head;
         std.debug.print("LinkedList: ", .{});
         while (current != null) {
@@ -109,7 +109,7 @@ const LinkedList = struct {
     }
 
     /// ✅ **New Method: Get Length of the List**
-    fn length(self: *LinkedList) usize {
+    pub fn length(self: *LinkedList) usize {
         var count: usize = 0;
         var current = self.head;
 
@@ -121,7 +121,7 @@ const LinkedList = struct {
     }
 
     /// ✅ **New Method: Find a Node with the Given Value**
-    fn find(self: *LinkedList, value: i32) ?*Node {
+    pub fn find(self: *LinkedList, value: i32) ?*Node {
         var current = self.head;
 
         while (current != null) {
@@ -133,7 +133,7 @@ const LinkedList = struct {
         return null; // Not found
     }
 
-    fn deinit(self: *LinkedList) void {
+    pub fn deinit(self: *LinkedList) void {
         var current = self.head;
         while (current != null) {
             const temp = current;
