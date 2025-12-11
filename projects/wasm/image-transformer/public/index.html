@@ -1,0 +1,46 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <title>Zig WASM Image Transformer</title>
+        <style>
+            body {
+                font-family: sans-serif;
+                padding: 20px;
+            }
+            .row {
+                display: flex;
+                gap: 20px;
+                margin-top: 20px;
+            }
+            .col {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+            }
+            canvas {
+                border: 1px solid #ccc;
+            }
+        </style>
+    </head>
+    <body>
+        <h2>Zig WASM Image Transformer</h2>
+
+        <input type="file" id="fileInput" accept="image/*" />
+
+        <div class="row">
+            <div class="col">
+                <h3>Original</h3>
+                <canvas id="canvasOriginal"></canvas>
+            </div>
+
+            <div class="col">
+                <h3>Grayscale</h3>
+                <canvas id="canvasGray"></canvas>
+            </div>
+        </div>
+
+        <button onclick="applyGrayscale()">Apply Grayscale</button>
+        <script src="main.js"></script>
+    </body>
+</html>
