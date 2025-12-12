@@ -9,5 +9,15 @@ zig build-exe src/main.zig \
   --export=brightness \
   --export=threshold \
   --export=sepia \
+  --export=sobel \
+  --export=gaussian \
+  --export=color_matrix \
+  --export=contrast \
+  --export=saturation \
+  --export=nashville \
+  --export=valencia \
+  --export=inkwell \
+  --export=lomo \
+  --export=vignette \
   -O ReleaseFast \
   -femit-bin=public/image_transformer.wasm

@@ -116,6 +116,13 @@ function applyFilter(name, param) {
     case "vintage": return applyVintage();
     case "clarendon": return applyClarendon();
     case "cool": return applyCoolTone();
+    case "contrast": return applyContrast(param || 0);
+    case "saturation": return applySaturation(param || 0);
+    case "nashville": return applyNashville();
+    case "valencia": return applyValencia();
+    case "inkwell": return applyInkwell();
+    case "lomo": return applyLomo();
+    case "vignette": return applyVignette();
     default: alert("Unknown filter: " + name);
   }
 }
@@ -249,11 +256,13 @@ function applySobel() {
 
   const ptr = wasm.alloc(len);
 
-  const wasmBytes = new Uint8Array(memory.buffer, ptr, len);
+  let wasmBytes = new Uint8Array(memory.buffer, ptr, len);
   wasmBytes.set(copy.data);
 
   wasm.sobel(ptr, len, width, height);
 
+  // Re-get buffer reference in case memory grew
+  wasmBytes = new Uint8Array(memory.buffer, ptr, len);
   copy.data.set(wasmBytes);
   ctxOutput.putImageData(copy, 0, 0);
 
@@ -271,11 +280,13 @@ function applyGaussian() {
 
   const ptr = wasm.alloc(len);
 
-  const wasmBytes = new Uint8Array(memory.buffer, ptr, len);
+  let wasmBytes = new Uint8Array(memory.buffer, ptr, len);
   wasmBytes.set(copy.data);
 
   wasm.gaussian(ptr, len, width, height);
 
+  // Re-get buffer reference in case memory grew
+  wasmBytes = new Uint8Array(memory.buffer, ptr, len);
   copy.data.set(wasmBytes);
   ctxOutput.putImageData(copy, 0, 0);
 
@@ -343,4 +354,163 @@ function applyColorMatrix(matrix) {
   wasm.free(mPtr, 9);
 
   console.log("Color matrix filter applied");
+}
+
+
+// ---- CONTRAST ----
+function applyContrast(factor) {
+  if (!originalData) return alert("Load an image first!");
+
+  const copy = makeWorkingCopy();
+  const bytes = copy.data;
+  const len = bytes.length;
+
+  const ptr = wasm.alloc(len);
+
+  const wasmBytes = new Uint8Array(memory.buffer, ptr, len);
+  wasmBytes.set(bytes);
+
+  wasm.contrast(ptr, len, factor);
+
+  bytes.set(wasmBytes);
+  ctxOutput.putImageData(copy, 0, 0);
+
+  wasm.free(ptr, len);
+  console.log("Contrast applied:", factor);
+}
+
+
+// ---- SATURATION ----
+function applySaturation(factor) {
+  if (!originalData) return alert("Load an image first!");
+
+  const copy = makeWorkingCopy();
+  const bytes = copy.data;
+  const len = bytes.length;
+
+  const ptr = wasm.alloc(len);
+
+  const wasmBytes = new Uint8Array(memory.buffer, ptr, len);
+  wasmBytes.set(bytes);
+
+  wasm.saturation(ptr, len, factor);
+
+  bytes.set(wasmBytes);
+  ctxOutput.putImageData(copy, 0, 0);
+
+  wasm.free(ptr, len);
+  console.log("Saturation applied:", factor);
+}
+
+
+// ---- NASHVILLE ----
+function applyNashville() {
+  if (!originalData) return alert("Load an image first!");
+
+  const copy = makeWorkingCopy();
+  const bytes = copy.data;
+  const len = bytes.length;
+
+  const ptr = wasm.alloc(len);
+
+  const wasmBytes = new Uint8Array(memory.buffer, ptr, len);
+  wasmBytes.set(bytes);
+
+  wasm.nashville(ptr, len);
+
+  bytes.set(wasmBytes);
+  ctxOutput.putImageData(copy, 0, 0);
+
+  wasm.free(ptr, len);
+  console.log("Nashville filter applied");
+}
+
+
+// ---- VALENCIA ----
+function applyValencia() {
+  if (!originalData) return alert("Load an image first!");
+
+  const copy = makeWorkingCopy();
+  const bytes = copy.data;
+  const len = bytes.length;
+
+  const ptr = wasm.alloc(len);
+
+  const wasmBytes = new Uint8Array(memory.buffer, ptr, len);
+  wasmBytes.set(bytes);
+
+  wasm.valencia(ptr, len);
+
+  bytes.set(wasmBytes);
+  ctxOutput.putImageData(copy, 0, 0);
+
+  wasm.free(ptr, len);
+  console.log("Valencia filter applied");
+}
+
+
+// ---- INKWELL ----
+function applyInkwell() {
+  if (!originalData) return alert("Load an image first!");
+
+  const copy = makeWorkingCopy();
+  const bytes = copy.data;
+  const len = bytes.length;
+
+  const ptr = wasm.alloc(len);
+
+  const wasmBytes = new Uint8Array(memory.buffer, ptr, len);
+  wasmBytes.set(bytes);
+
+  wasm.inkwell(ptr, len);
+
+  bytes.set(wasmBytes);
+  ctxOutput.putImageData(copy, 0, 0);
+
+  wasm.free(ptr, len);
+  console.log("Inkwell filter applied");
+}
+
+
+// ---- LOMO ----
+function applyLomo() {
+  if (!originalData) return alert("Load an image first!");
+
+  const copy = makeWorkingCopy();
+  const len = copy.data.length;
+
+  const ptr = wasm.alloc(len);
+
+  const wasmBytes = new Uint8Array(memory.buffer, ptr, len);
+  wasmBytes.set(copy.data);
+
+  wasm.lomo(ptr, len, width, height);
+
+  copy.data.set(wasmBytes);
+  ctxOutput.putImageData(copy, 0, 0);
+
+  wasm.free(ptr, len);
+  console.log("Lomo filter applied");
+}
+
+
+// ---- VIGNETTE ----
+function applyVignette() {
+  if (!originalData) return alert("Load an image first!");
+
+  const copy = makeWorkingCopy();
+  const len = copy.data.length;
+
+  const ptr = wasm.alloc(len);
+
+  const wasmBytes = new Uint8Array(memory.buffer, ptr, len);
+  wasmBytes.set(copy.data);
+
+  wasm.vignette(ptr, len, width, height);
+
+  copy.data.set(wasmBytes);
+  ctxOutput.putImageData(copy, 0, 0);
+
+  wasm.free(ptr, len);
+  console.log("Vignette applied");
 }
