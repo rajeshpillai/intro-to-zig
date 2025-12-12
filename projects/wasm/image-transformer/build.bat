@@ -1,0 +1,23 @@
+zig build-exe src/main.zig ^
+  -target wasm32-freestanding ^
+  --import-memory ^
+  -fno-entry ^
+  --export=alloc ^
+  --export=free ^
+  --export=grayscale ^
+  --export=invert ^
+  --export=brightness ^
+  --export=threshold ^
+  --export=sepia ^
+  --export=sobel ^
+  --export=gaussian ^
+  --export=color_matrix ^
+  --export=contrast ^
+  --export=saturation ^
+  --export=nashville ^
+  --export=valencia ^
+  --export=inkwell ^
+  --export=lomo ^
+  --export=vignette ^
+  -O ReleaseFast ^
+  -femit-bin=public/image_transformer.wasm
