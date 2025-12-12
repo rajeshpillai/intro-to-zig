@@ -38,9 +38,19 @@
                 <h3>Grayscale</h3>
                 <canvas id="canvasGray"></canvas>
             </div>
+
+            <div class="col">
+                <h3>Output</h3>
+                <canvas id="canvasOutput"></canvas>
+            </div>
         </div>
 
-        <button onclick="applyGrayscale()">Apply Grayscale</button>
+        <button onclick="applyFilter('grayscale')">Grayscale</button>
+        <button onclick="applyFilter('invert')">Invert</button>
+        <button onclick="applyFilter('brightness', 40)">Brightness +40</button>
+        <button onclick="applyFilter('brightness', -40)">Brightness -40</button>
+        <button onclick="applyFilter('threshold', 128)">Threshold</button>
+        <button onclick="applyFilter('sepia')">Sepia</button>
 
         <script src="main.js"></script>
     </body>
