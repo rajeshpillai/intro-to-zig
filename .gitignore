@@ -1,4 +1,6 @@
 # Ignore build directories
+.zig-cache/**/*
+.zig-cache
 zig-cache/
 zig-out/
 zig-cache/**/*

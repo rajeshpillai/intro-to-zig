@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Video Frame Analyzer - WASM</title>
+    <link rel="stylesheet" href="index.css" />
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <h1>🎥 Video Frame Analyzer</h1>
+            <p class="subtitle">Real-time WebRTC Analysis • Powered by Zig WebAssembly</p>
+        </header>
+
+        <div class="main-grid">
+            <!-- Video Preview Section -->
+            <div class="video-section">
+                <div class="video-wrapper">
+                    <video id="videoPreview" autoplay playsinline></video>
+                    <canvas id="hiddenCanvas" style="display: none;"></canvas>
+                    <div class="video-overlay" id="statusOverlay">
+                        <div class="status-badge">Ready</div>
+                    </div>
+                </div>
+
+                <div class="controls">
+                    <button id="startBtn" class="btn btn-primary">
+                        <span class="icon">▶</span> Start Analysis
+                    </button>
+                    <button id="stopBtn" class="btn btn-secondary" disabled>
+                        <span class="icon">⏹</span> Stop
+                    </button>
+                    <button id="screenshotBtn" class="btn btn-accent" disabled>
+                        <span class="icon">📸</span> Screenshot
+                    </button>
+                </div>
+
+                <div class="settings">
+                    <div class="setting-item">
+                        <label for="cameraSelect">Camera:</label>
+                        <select id="cameraSelect">
+                            <option>Loading cameras...</option>
+                        </select>
+                    </div>
+                    <div class="setting-item">
+                        <label for="fpsSelect">Analysis Rate:</label>
+                        <select id="fpsSelect">
+                            <option value="15">15 FPS</option>
+                            <option value="30" selected>30 FPS</option>
+                            <option value="60">60 FPS</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Metrics Dashboard -->
+            <div class="metrics-section">
+                <h2>📊 Analysis Metrics</h2>
+
+                <!-- Brightness -->
+                <div class="metric-card">
+                    <div class="metric-header">
+                        <span class="metric-icon">💡</span>
+                        <span class="metric-title">Brightness</span>
+                    </div>
+                    <div class="metric-value" id="brightnessValue">--</div>
+                    <div class="metric-bar">
+                        <div class="metric-bar-fill" id="brightnessBar"></div>
+                    </div>
+                    <div class="metric-label">0-255 scale</div>
+                </div>
+
+                <!-- Blur Detection -->
+                <div class="metric-card">
+                    <div class="metric-header">
+                        <span class="metric-icon">🔍</span>
+                        <span class="metric-title">Blur Score</span>
+                    </div>
+                    <div class="metric-value" id="blurValue">--</div>
+                    <div class="metric-bar">
+                        <div class="metric-bar-fill blur" id="blurBar"></div>
+                    </div>
+                    <div class="metric-label">Higher = Sharper</div>
+                </div>
+
+                <!-- Face Presence -->
+                <div class="metric-card">
+                    <div class="metric-header">
+                        <span class="metric-icon">👤</span>
+                        <span class="metric-title">Face Presence</span>
+                    </div>
+                    <div class="metric-value" id="faceValue">--</div>
+                    <div class="metric-bar">
+                        <div class="metric-bar-fill face" id="faceBar"></div>
+                    </div>
+                    <div class="metric-label">Confidence %</div>
+                </div>
+
+                <!-- Motion Detection -->
+                <div class="metric-card">
+                    <div class="metric-header">
+                        <span class="metric-icon">🏃</span>
+                        <span class="metric-title">Motion Level</span>
+                    </div>
+                    <div class="metric-value" id="motionValue">--</div>
+                    <div class="metric-bar">
+                        <div class="metric-bar-fill motion" id="motionBar"></div>
+                    </div>
+                    <div class="metric-label">Movement intensity</div>
+                </div>
+
+                <!-- Cheating Alerts -->
+                <div class="alert-section">
+                    <h3>⚠️ Cheating Detection</h3>
+                    <div id="alertsContainer" class="alerts-container">
+                        <div class="alert-placeholder">No alerts</div>
+                    </div>
+                </div>
+
+                <!-- Performance Stats -->
+                <div class="stats-section">
+                    <h3>⚡ Performance</h3>
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <div class="stat-label">FPS</div>
+                            <div class="stat-value" id="fpsValue">--</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-label">Process Time</div>
+                            <div class="stat-value" id="processTimeValue">--</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-label">Frames</div>
+                            <div class="stat-value" id="frameCountValue">0</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+
+</html>
