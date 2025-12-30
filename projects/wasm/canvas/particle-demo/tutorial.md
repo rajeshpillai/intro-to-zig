@@ -8,12 +8,12 @@ This guide provides a comprehensive, beginner-friendly path to creating a high-p
 Open your terminal and create the following directory structure:
 
 ```bash
-mkdir -p canvas/src canvas/public
-cd canvas
+mkdir -p particle-demo/src particle-demo/public
+cd particle-demo
 ```
 
 Your folder structure should now look like this:
-- `canvas/`
+- `particle-demo/`
   - `src/` (Where our Zig code lives)
   - `public/` (Where our web assets and compiled WASM live)
 
@@ -22,7 +22,7 @@ Your folder structure should now look like this:
 ## Step 2: Create the Build Script
 WASM targets in Zig require specific flags. We'll create a shell script to simplify the compilation.
 
-Create a file named `build.sh` in the `canvas/` folder:
+Create a file named `build.sh` in the `particle-demo/` folder:
 
 ```bash
 #!/bin/bash

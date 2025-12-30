@@ -16,7 +16,7 @@ By performing physics calculations and direct pixel manipulation in Zig, we bypa
 ## Getting Started
 
 ### 1. Build the WASM Binary
-Navigate to the `canvas` directory and run the build script:
+Navigate to the `particle-demo` directory and run the build script:
 ```bash
 ./build.sh
 ```
